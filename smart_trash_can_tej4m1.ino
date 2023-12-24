@@ -1,11 +1,12 @@
-// include the servo library and make new servo object
+// include the servo library and make new servo objects
 #include <Servo.h>
-Servo servo;
+Servo servo1;
+Servo servo2;
 
 // pushbutton
 bool lock = false;
 bool buttonPressable = true;
-const int buttonPin = 2; // button connected to digital pin 2
+const int buttonPin = 3; // button connected to digital pin 2
 // servo activation distance
 int distanceVal = 30;
 
@@ -20,8 +21,13 @@ int distance;
 
 void setup() {
   Serial.begin(9600); //use serial port with baud rate of 9600
-  servo.attach(7); //attach servo to pin 7
-  servo.write(0);
+  // first servo
+  servo1.attach(7);
+  servo1.write(0);
+  delay(200);
+  // second servo
+  servo2.attach(6);
+  servo2.write(0);
   delay(200);
   pinMode(trigPin1, OUTPUT);  // Sets the trigPin as an Output
   pinMode(echoPin1, INPUT);   // Sets the echoPin as an Input
@@ -30,7 +36,7 @@ void setup() {
 
 void loop() {
   int buttonState = digitalRead(buttonPin); //store button status as variable
-  servoReady();
+  distanceReady();
   functionality();
   
   // change servo lock state
@@ -49,8 +55,7 @@ void loop() {
     Serial.println(lock);
 }
 
-// preps servo for action
-void servoReady() {
+void distanceReady() {
   // Clears the trigPin
   digitalWrite(trigPin1, LOW);
   delayMicroseconds(2);
@@ -58,9 +63,9 @@ void servoReady() {
   digitalWrite(trigPin1, HIGH);
   delayMicroseconds(10);
   digitalWrite(trigPin1, LOW);
-  // Reads the echoPin, returns the sound wave travel time in ms
+  // Reads echoPin, returns the sound wave travel time in ms
   duration1 = pulseIn(echoPin1, HIGH);
-  // Calculating the distance
+  // Calculating distance
   distance = duration1 * 0.034 / 2;
 }
 
@@ -68,11 +73,13 @@ void servoReady() {
 void functionality() {
   // open can when near
   if (distance <= distanceVal && lock == false) {
-    servo.write(90);
+    servo1.write(90);
+    servo2.write(90);
     delay(200);
     // close can when far
   } else if (distance > distanceVal && lock == false) {
-    servo.write(0);
+    servo1.write(0);
+    servo2.write(0);
     delay(200);
     // freeze servo
   } else if (lock == true){
