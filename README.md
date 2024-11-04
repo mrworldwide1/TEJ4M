@@ -1,1 +1,1 @@
-Computer engineering
+Final project in Grade 12 Computer Engineering which is a smart trash can that opens automatically when you are near it, improving cleanliness and eliminating accessiblity barriers for a key everyday task.
